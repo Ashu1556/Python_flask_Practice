@@ -1,3 +1,7 @@
+import os
+
+os.environ["TESTING"] = "true"
+
 import pytest
 from app import app, mongo
 from bson.objectid import ObjectId

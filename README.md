@@ -4,6 +4,12 @@ A simple **Flask** web application to manage student records with **MongoDB** as
 
 ---
 
+## CI/CD Status
+
+This repository now includes both a Jenkins pipeline and a GitHub Actions workflow so the application can be tested automatically on every push and deployed from the staging or production branches/tags.
+
+---
+
 ## Features
 
 * List all students on the home page
@@ -115,11 +121,36 @@ Form pre-filled with student details.
 
 ---
 
+## Jenkins Pipeline
+
+1. Install Jenkins on a VM or use a cloud-hosted Jenkins instance.
+2. Configure Jenkins with Python 3 and install the required packages from `requirements.txt`.
+3. Create a pipeline job pointing to this repository and use the included `Jenkinsfile`.
+4. Configure email notifications in Jenkins under the `post` section by replacing `your-email@example.com` with a valid address.
+5. The pipeline runs three stages:
+   - Build: install dependencies
+   - Test: run the pytest suite
+   - Deploy: print the deployment step for the main or staging branch
+
+## GitHub Actions Workflow
+
+1. Push changes to the `main` or `staging` branches to trigger the workflow.
+2. Create a tag starting with `v` to trigger the production deployment job.
+3. Add any deployment secrets in GitHub repository settings, for example:
+   - `STAGING_DEPLOY_TOKEN`
+   - `PRODUCTION_DEPLOY_TOKEN`
+4. The workflow performs:
+   - Install dependencies
+   - Run tests
+   - Deploy to staging for the `staging` branch
+   - Deploy to production for version tags
+
 ## Notes
 
-* Make sure MongoDB is running and accessible via the URI in `.env`
-* Delete action includes a confirmation page to prevent accidental deletion
-* Uses `ObjectId` from `bson` to work with MongoDB document IDs
+* Make sure MongoDB is running and accessible via the URI in `.env` when you use the live database path.
+* The test suite is configured to run in a CI-safe in-memory mode when `TESTING=true` or when no MongoDB URI is provided.
+* Delete action includes a confirmation page to prevent accidental deletion.
+* Uses `ObjectId` from `bson` to work with MongoDB document IDs.
 * If you use MongoDB Atlas on macOS, install dependencies again (`pip install -r requirements.txt`). This project now uses `certifi` CA bundle explicitly to avoid common TLS certificate verification failures with `pymongo`.
 
 ---
